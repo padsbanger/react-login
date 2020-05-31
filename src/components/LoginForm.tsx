@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Formik, Form, Field, FormikHelpers } from 'formik'
-import { Button, Snackbar, Dialog } from '@material-ui/core'
+import { Button } from '@material-ui/core'
+import { Alert } from '@material-ui/lab'
 
 import { User } from '../types/User'
 import { validate } from '../utils'
@@ -15,22 +16,18 @@ const initialValues: User = {
 function LoginForm() {
   const [loginStatus, setLoginStatus] = useState<'' | 'error' | 'success'>('')
   const [loginMessage, setLoginMessage] = useState<null | string>(null)
-  const [loading, setLoading] = useState(false)
   const handleSubmit = (
     values: User,
     { setSubmitting, resetForm }: FormikHelpers<User>
   ) => {
     setLoginStatus('')
     setLoginMessage(null)
-    setLoading(true)
     fetch('/api/login', {
       method: 'post',
       body: JSON.stringify(values),
     })
       .then((response) => {
-        setLoading(false)
         setSubmitting(false)
-
         if (!response.ok) {
           throw Error(response.statusText)
         }
@@ -42,7 +39,6 @@ function LoginForm() {
         setLoginMessage(message as string)
       })
       .catch((error: Error) => {
-        console.log(error.message)
         setLoginMessage(error.message)
         setLoginStatus('error')
       })
@@ -73,6 +69,7 @@ function LoginForm() {
               type="submit"
               variant="contained"
               color="primary"
+              fullWidth
               disabled={isSubmitting}
             >
               Login
@@ -80,13 +77,11 @@ function LoginForm() {
           </Form>
         )}
       </Formik>
-      <Dialog
-        onClose={() => setLoginStatus('')}
-        aria-labelledby="simple-dialog-title"
-        open={!!loginStatus.length}
-      >
-        <div>{loginMessage}</div>
-      </Dialog>
+      {loginStatus ? (
+        <Alert style={{ marginTop: '1rem' }} severity={loginStatus}>
+          {loginMessage}
+        </Alert>
+      ) : null}
     </>
   )
 }

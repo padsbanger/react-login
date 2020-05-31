@@ -8,12 +8,11 @@ const createMockServer = () => {
       this.post(
         '/login',
         (schema, request) => {
-          if (Math.floor(Math.random() * 10) % 2 !== 110) {
-            let data = { message: 'Invalid email or password' }
-            return new Response(401, {}, data)
+          if (Math.floor(Math.random() * 10) % 2 === 0) {
+            return new Response(401, {}, {})
           } else {
-            let attrs: User = JSON.parse(request.requestBody)
-            let data = { message: `Succesfuly logged in as ${attrs.email}` }
+            const attrs: User = JSON.parse(request.requestBody)
+            const data = { message: `Succesfuly logged in as ${attrs.email}` }
             return new Response(200, {}, data)
           }
         },

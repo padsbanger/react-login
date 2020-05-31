@@ -18,10 +18,12 @@ function App() {
 }
 
 const CenterContainer = styled(Container)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 95vh;
 `
 
 export default App
